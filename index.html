@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Claim System</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #1f2937;
+            min-height: 100vh;
+            position: relative;
+            z-index: 0;
+            border: 8px solid #0077ff;
+            box-shadow: inset 0 0 20px rgba(0, 119, 255, 0.3);
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: #0077ff;
+            opacity: 0.9;
+            z-index: -1;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: transparent;
+            z-index: -1;
+        }
+
+        .student-container {
+            width: 100%;
+            height: 100vh;
+            margin: 0;
+            padding: 30px 20px;
+        }
+
+        .student-header {
+            padding: 28px;
+            margin-bottom: 25px;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 16px;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.14);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+            align-items: center;
+            border: 2px solid #0077ff;
+            filter: blur(0.3px);
+        }
+
+        .student-header h1 {
+            margin: 0;
+            font-size: 2.1rem;
+            color: #0f2b5f;
+        }
+
+        .student-subtitle {
+            margin: 10px 0 0;
+            color: #4b5663;
+            max-width: 680px;
+        }
+
+        .student-main {
+            display: grid;
+            gap: 24px;
+        }
+
+        .enroll-card {
+            background: rgba(255, 255, 255, 0.96);
+            padding: 32px;
+            border-radius: 18px;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
+            border: 2px solid #0077ff;
+            filter: blur(0.3px);
+        }
+
+        .enroll-card h2 {
+            margin-top: 0;
+            color: #122951;
+        }
+
+        .enroll-form {
+            display: grid;
+            gap: 20px;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(220px, 1fr));
+            gap: 18px;
+        }
+
+        label {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 0.95rem;
+            color: #323f4b;
+            font-weight: 700;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #cad1db;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #1f3049;
+            transition: border-color 0.2s ease;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #0057ff;
+        }
+
+        .agreement {
+            margin: 0;
+            font-size: 0.95rem;
+            color: #4b5663;
+            line-height: 1.6;
+        }
+
+        .final-note {
+            margin-top: 4px;
+            font-size: 0.9rem;
+            color: #fa0909;
+            opacity: 0.7;
+        }
+
+        .form-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn {
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            padding: 16px 24px;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .btn-primary {
+            background: #0057ff;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #1f3049;
+        }
+
+        @media (max-width: 860px) {
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="student-container">
+        <header class="student-header">
+            <div>
+                <h1>Claim Your Books</h1>
+                </div>
+                
+        </header>
+
+        <main class="student-main">
+            <section class="enroll-card">
+                <h2>Book Claim Form</h2>
+                <form id="claimForm" class="enroll-form">
+                    <div class="input-grid">
+                        <label for="course">
+                            Course
+                            <input type="text" id="course" name="course" required />
+                        </label>
+
+                        <label for="bookTitle">
+                            Book Title
+                            <input type="text" id="bookTitle" name="bookTitle" required />
+                        </label>
+
+                        <label for="quantity">
+                            Quantity
+                            <input type="number" id="quantity" name="quantity" min="1" required />
+                        </label>
+                    </div>
+
+                    <label for="phone">
+                        Phone Number <span class="final-note">(Optional)</span>
+                        <input type="tel" id="phone" name="phone" />
+                    </label>
+
+                    <p class="agreement">By submitting this form, you confirm the books are already claimed and your entry is final.</p>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Submit Claim</button>
+                        <a href="claimed-books.html" class="btn btn-secondary">View Claimed Books</a>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const claimForm = document.getElementById('claimForm');
+        let claims = JSON.parse(localStorage.getItem('bookClaims')) || [];
+
+        claimForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const course = document.getElementById('course').value.trim();
+            const bookTitle = document.getElementById('bookTitle').value.trim();
+            const quantity = document.getElementById('quantity').value;
+            const phone = document.getElementById('phone').value.trim();
+
+            const claim = {
+                course,
+                bookTitle,
+                quantity,
+                phone,
+                timestamp: new Date().toLocaleString()
+            };
+
+            claims.push(claim);
+            localStorage.setItem('bookClaims', JSON.stringify(claims));
+
+            alert('Book claim submitted successfully!');
+            claimForm.reset();
+        });
+    </script>
+</body>
+</html>

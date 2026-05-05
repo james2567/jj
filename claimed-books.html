@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claimed Books</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #1f2937;
+            min-height: 100vh;
+            position: relative;
+            z-index: 0;
+            border: 8px solid #0077ff;
+            box-shadow: inset 0 0 20px rgba(0, 119, 255, 0.3);
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: #0077ff;
+            opacity: 0.9;
+            z-index: -1;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: transparent;
+            z-index: -1;
+        }
+
+        .student-container {
+            width: 100%;
+            height: 100vh;
+            margin: 0;
+            padding: 30px 20px;
+        }
+
+        .student-header {
+            padding: 28px;
+            margin-bottom: 25px;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 16px;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.14);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+            align-items: center;
+            border: 2px solid #0077ff;
+            filter: blur(0.3px);
+        }
+
+        .student-header h1 {
+            margin: 0;
+            font-size: 2.1rem;
+            color: #0f2b5f;
+        }
+
+        .student-subtitle {
+            margin: 10px 0 0;
+            color: #4b5663;
+            max-width: 680px;
+        }
+
+        .student-main {
+            display: grid;
+            gap: 24px;
+        }
+
+        .enroll-card {
+            background: rgba(255, 255, 255, 0.96);
+            padding: 32px;
+            border-radius: 18px;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
+        }
+
+        .enroll-card h2 {
+            margin-top: 0;
+            color: #122951;
+        }
+
+        .info-box {
+            padding: 22px;
+            border-radius: 16px;
+            background: #f5f8ff;
+            border: 1px dashed #7a92c4;
+            color: #14243d;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            padding: 15px 18px;
+            margin-bottom: 12px;
+            border-radius: 14px;
+            background: #f8fbff;
+            border: 1px solid #d8dee8;
+            color: #1f3049;
+        }
+
+        a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 22px;
+            background: #0057ff;
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            transition: background 0.2s ease;
+            margin-top: 20px;
+        }
+
+        a:hover {
+            background: #003fb5;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #cad1db;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #0057ff;
+        }
+
+        .search-box button {
+            padding: 12px 24px;
+            background: #0057ff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .search-box button:hover {
+            background: #003fb5;
+        }
+
+        @media (max-width: 860px) {
+            .student-header,
+            .student-main {
+                gap: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="student-container">
+        <header class="student-header">
+            <div>
+                <h1>Claimed Books</h1>
+                <p class="student-subtitle">Books that have been claimed</p>
+            </div>
+        </header>
+
+        <main class="student-main">
+            <section class="enroll-card">
+                <h2>Claimed Books List</h2>
+                
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search by book title, course, or phone...">
+                    <button onclick="performSearch()">Search</button>
+                </div>
+                <ul id="claimedBooks"></ul>
+                <a href="index.html">Back to Claim Form</a>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const claimedBooks = document.getElementById('claimedBooks');
+        const claims = JSON.parse(localStorage.getItem('bookClaims')) || [];
+        const searchInput = document.getElementById('searchInput');
+
+        function displayClaims(filteredClaims = claims) {
+            claimedBooks.innerHTML = '';
+            if (filteredClaims.length === 0) {
+                claimedBooks.innerHTML = '<li>No books found.</li>';
+                return;
+            }
+
+            filteredClaims.forEach(claim => {
+                const li = document.createElement('li');
+                li.textContent = `${claim.bookTitle} (${claim.quantity}) - Course: ${claim.course}${claim.phone ? ' - Phone: ' + claim.phone : ''} - Claimed on: ${claim.timestamp}`;
+                claimedBooks.appendChild(li);
+            });
+        }
+
+        function performSearch() {
+            const searchTerm = searchInput.value.toLowerCase();
+            if (!searchTerm.trim()) {
+                displayClaims(claims);
+                return;
+            }
+
+            const filteredClaims = claims.filter(claim => {
+                return (
+                    claim.bookTitle.toLowerCase().includes(searchTerm) ||
+                    claim.course.toLowerCase().includes(searchTerm) ||
+                    (claim.phone && claim.phone.includes(searchTerm))
+                );
+            });
+
+            displayClaims(filteredClaims);
+        }
+
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') performSearch();
+        });
+
+        displayClaims();
+    </script>
+</body>
+</html>
