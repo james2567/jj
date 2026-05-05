@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Claim System</title>
+    <title>BookClaim Pro - Professional Book Management System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
@@ -11,120 +12,255 @@
 
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #1f2937;
             min-height: 100vh;
             position: relative;
             z-index: 0;
             border: 8px solid #0077ff;
             box-shadow: inset 0 0 20px rgba(0, 119, 255, 0.3);
+            overflow-x: hidden;
         }
 
         body::before {
             content: "";
             position: fixed;
             inset: 0;
-            background: #0077ff;
-            opacity: 0.9;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            opacity: 0.95;
             z-index: -1;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         body::after {
             content: "";
             position: fixed;
             inset: 0;
-            background: transparent;
+            background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3), transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1), transparent 50%),
+                        radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2), transparent 50%);
             z-index: -1;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-10px) rotate(1deg); }
+            66% { transform: translateY(5px) rotate(-1deg); }
         }
 
         .student-container {
             width: 100%;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
-            padding: 30px 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
         }
 
         .student-header {
-            padding: 28px;
-            margin-bottom: 25px;
-            background: rgba(255, 255, 255, 0.92);
-            border-radius: 16px;
-            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.14);
+            padding: 30px 40px;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             gap: 20px;
             align-items: center;
-            border: 2px solid #0077ff;
-            filter: blur(0.3px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            animation: slideInFromTop 0.8s ease-out;
         }
 
-        .student-header h1 {
+        .student-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes slideInFromTop {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .brand-info h1 {
             margin: 0;
-            font-size: 2.1rem;
-            color: #0f2b5f;
+            font-size: 2.2rem;
+            color: #2d3748;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .student-subtitle {
-            margin: 10px 0 0;
-            color: #4b5663;
-            max-width: 680px;
+        .brand-tagline {
+            margin: 5px 0 0;
+            color: #718096;
+            font-size: 0.95rem;
+            font-weight: 500;
         }
 
         .student-main {
             display: grid;
-            gap: 24px;
+            gap: 30px;
+            flex: 1;
         }
 
         .enroll-card {
-            background: rgba(255, 255, 255, 0.96);
-            padding: 32px;
-            border-radius: 18px;
-            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
-            border: 2px solid #0077ff;
-            filter: blur(0.3px);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .enroll-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 300% 300%;
+            animation: gradientFlow 3s ease infinite;
+        }
+
+        @keyframes fadeInUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .enroll-card h2 {
             margin-top: 0;
-            color: #122951;
+            color: #2d3748;
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .enroll-card h2::before {
+            content: "📚";
+            font-size: 1.5rem;
         }
 
         .enroll-form {
             display: grid;
-            gap: 20px;
+            gap: 25px;
         }
 
         .input-grid {
             display: grid;
-            grid-template-columns: repeat(3, minmax(220px, 1fr));
-            gap: 18px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            position: relative;
         }
 
         label {
             display: flex;
-            flex-direction: column;
+            align-items: center;
             gap: 8px;
             font-size: 0.95rem;
-            color: #323f4b;
-            font-weight: 700;
+            color: #4a5568;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        label i {
+            color: #667eea;
+            font-size: 1.1rem;
+        }
+
+        .input-wrapper {
+            position: relative;
         }
 
         input,
         select {
             width: 100%;
-            padding: 14px 16px;
-            border: 1px solid #cad1db;
-            border-radius: 10px;
+            padding: 16px 20px;
+            padding-left: 50px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
             background: #ffffff;
-            color: #1f3049;
-            transition: border-color 0.2s ease;
+            color: #2d3748;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         input:focus,
         select:focus {
             outline: none;
-            border-color: #0057ff;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+            font-size: 1.1rem;
+            z-index: 1;
         }
 
         .agreement {
@@ -144,27 +280,156 @@
         .form-actions {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 15px;
             align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
         }
 
         .btn {
             cursor: pointer;
             border: none;
-            border-radius: 10px;
-            padding: 16px 24px;
+            border-radius: 12px;
+            padding: 16px 28px;
             font-size: 1rem;
-            font-weight: 700;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn-primary {
-            background: #0057ff;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
 
         .btn-secondary {
-            background: #f1f5f9;
-            color: #1f3049;
+            background: rgba(255, 255, 255, 0.9);
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f7fafc;
+            border-color: #cbd5e0;
+            transform: translateY(-1px);
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding: 30px 0;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            animation: fadeInUp 0.8s ease-out 1s both;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .footer-section h3 {
+            color: white;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .footer-section p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .copyright {
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #f56565, #e53e3e);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         @media (max-width: 860px) {
@@ -177,10 +442,18 @@
 <body>
     <div class="student-container">
         <header class="student-header">
-            <div>
-                <h1>Claim Your Books</h1>
+            <div class="logo-section">
+                <div class="logo">B</div>
+                <div class="brand-info">
+                    <h1>BookClaim Pro</h1>
+                    <div class="brand-tagline">Professional Book Management System</div>
                 </div>
-                
+            </div>
+            <div class="header-actions">
+                <a href="claimed-books.html" class="btn btn-secondary">
+                    <i class="fas fa-list"></i> View Claims
+                </a>
+            </div>
         </header>
 
         <main class="student-main">
@@ -188,63 +461,155 @@
                 <h2>Book Claim Form</h2>
                 <form id="claimForm" class="enroll-form">
                     <div class="input-grid">
-                        <label for="course">
-                            Course
-                            <input type="text" id="course" name="course" required />
-                        </label>
+                        <div class="form-group">
+                            <label for="course">
+                                <i class="fas fa-graduation-cap"></i> Course
+                            </label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-book-open input-icon"></i>
+                                <input type="text" id="course" name="course" placeholder="e.g., Computer Science 101" required />
+                            </div>
+                        </div>
 
-                        <label for="bookTitle">
-                            Book Title
-                            <input type="text" id="bookTitle" name="bookTitle" required />
-                        </label>
+                        <div class="form-group">
+                            <label for="bookTitle">
+                                <i class="fas fa-book"></i> Book Title
+                            </label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-heading input-icon"></i>
+                                <input type="text" id="bookTitle" name="bookTitle" placeholder="Enter book title" required />
+                            </div>
+                        </div>
 
-                        <label for="quantity">
-                            Quantity
-                            <input type="number" id="quantity" name="quantity" min="1" required />
-                        </label>
+                        <div class="form-group">
+                            <label for="quantity">
+                                <i class="fas fa-hashtag"></i> Quantity
+                            </label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-calculator input-icon"></i>
+                                <input type="number" id="quantity" name="quantity" min="1" placeholder="1" required />
+                            </div>
+                        </div>
                     </div>
 
-                    <label for="phone">
-                        Phone Number <span class="final-note">(Optional)</span>
-                        <input type="tel" id="phone" name="phone" />
-                    </label>
+                    <div class="form-group">
+                        <label for="phone">
+                            <i class="fas fa-phone"></i> Phone Number <span class="final-note">(Optional)</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-mobile-alt input-icon"></i>
+                            <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" />
+                        </div>
+                    </div>
 
-                    <p class="agreement">By submitting this form, you confirm the books are already claimed and your entry is final.</p>
+                    <div class="agreement">
+                        <i class="fas fa-info-circle" style="color: #667eea; margin-top: 2px;"></i>
+                        <div>By submitting this form, you confirm the books are already claimed and your entry is final. All information will be stored locally in your browser.</div>
+                    </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">Submit Claim</button>
-                        <a href="claimed-books.html" class="btn btn-secondary">View Claimed Books</a>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Submit Claim
+                        </button>
+                        <button type="reset" class="btn btn-secondary">
+                            <i class="fas fa-undo"></i> Reset Form
+                        </button>
                     </div>
                 </form>
             </section>
         </main>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-cogs"></i> BookClaim Pro</h3>
+                    <p>Professional book management system</p>
+                    <p>Streamlined claim processing</p>
+                </div>
+                <div class="footer-section">
+                    <h3><i class="fas fa-link"></i> Quick Links</h3>
+                    <p><a href="claimed-books.html">View Claims</a></p>
+                    <p><a href="#top">Back to Top</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3><i class="fas fa-info-circle"></i> Support</h3>
+                    <p>Local browser storage</p>
+                    <p>No data transmission</p>
+                </div>
+            </div>
+            <div class="footer-links">
+                <a href="#"><i class="fab fa-github"></i> GitHub</a>
+                <a href="#"><i class="fas fa-envelope"></i> Contact</a>
+                <a href="#"><i class="fas fa-question-circle"></i> Help</a>
+            </div>
+            <div class="copyright">
+                © 2024 BookClaim Pro. Built with modern web technologies.
+            </div>
+        </footer>
     </div>
 
     <script>
         const claimForm = document.getElementById('claimForm');
         let claims = JSON.parse(localStorage.getItem('bookClaims')) || [];
 
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                ${message}
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
         claimForm.addEventListener('submit', function (event) {
             event.preventDefault();
 
-            const course = document.getElementById('course').value.trim();
-            const bookTitle = document.getElementById('bookTitle').value.trim();
-            const quantity = document.getElementById('quantity').value;
-            const phone = document.getElementById('phone').value.trim();
+            const submitBtn = claimForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<div class="loading"></div> Processing...';
+            submitBtn.disabled = true;
 
-            const claim = {
-                course,
-                bookTitle,
-                quantity,
-                phone,
-                timestamp: new Date().toLocaleString()
-            };
+            // Simulate processing time
+            setTimeout(() => {
+                const course = document.getElementById('course').value.trim();
+                const bookTitle = document.getElementById('bookTitle').value.trim();
+                const quantity = document.getElementById('quantity').value;
+                const phone = document.getElementById('phone').value.trim();
 
-            claims.push(claim);
-            localStorage.setItem('bookClaims', JSON.stringify(claims));
+                if (!course || !bookTitle || !quantity) {
+                    showNotification('Please fill in all required fields!', 'error');
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    return;
+                }
 
-            alert('Book claim submitted successfully!');
-            claimForm.reset();
+                const claim = {
+                    course,
+                    bookTitle,
+                    quantity: parseInt(quantity),
+                    phone,
+                    timestamp: new Date().toLocaleString()
+                };
+
+                claims.push(claim);
+                localStorage.setItem('bookClaims', JSON.stringify(claims));
+
+                showNotification('Book claim submitted successfully! 🎉');
+                claimForm.reset();
+
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }, 1500);
         });
     </script>
 </body>
